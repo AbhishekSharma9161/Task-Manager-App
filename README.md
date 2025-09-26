@@ -1,6 +1,7 @@
 # Task Manager App
 
 A modern, responsive task management application built with React, TypeScript, and TailwindCSS. Features drag-and-drop functionality, task filtering, and a clean, intuitive interface.
+<img width="1878" height="870" alt="Image" src="https://github.com/user-attachments/assets/3133515c-a54c-41f4-b82c-2438bb0b65f7" />
 
 ## ✨ Features
 
