@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Moon, SunMedium } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import TaskGearIcon from "@/components/icons/TaskGearIcon";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -11,10 +12,10 @@ export default function Header() {
   return (
     <header className="w-full py-4 bg-secondary text-secondary-foreground">
       <div className="container flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary to-primary/60" />
+        <div className="flex items-center gap-3">
+          <TaskGearIcon className="h-10 w-10" />
           <span className="font-extrabold tracking-tight text-lg md:text-xl">
-            <span className="bg-background px-1.5 rounded">Task Manager App</span>
+            <span className="bg-background px-1.5 rounded">Task Manager</span>
           </span>
         </div>
         {mounted && (

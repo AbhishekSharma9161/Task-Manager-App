@@ -80,9 +80,15 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       setTasks((prev) => {
         const pending = prev.filter((t) => !t.completed);
         const completed = prev.filter((t) => t.completed);
+        
+        if (startIndex < 0 || startIndex >= pending.length || endIndex < 0 || endIndex >= pending.length) {
+          return prev;
+        }
+        
         const nextPending = [...pending];
         const [removed] = nextPending.splice(startIndex, 1);
         nextPending.splice(endIndex, 0, removed);
+        
         return [...nextPending, ...completed];
       });
     },

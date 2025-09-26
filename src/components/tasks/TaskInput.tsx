@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTasks } from "@/context/TasksContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus } from "lucide-react";
 
 export default function TaskInput() {
   const { addTask } = useTasks();
@@ -27,22 +29,60 @@ export default function TaskInput() {
   );
 
   return (
-    <form onSubmit={onSubmit} className="flex gap-2 w-full">
-      <Input
-        aria-label="Add a new task"
-        placeholder="Add a new task..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        className="flex-1"
-      />
-      <Button type="submit" disabled={!canSubmit} className="px-5">
-        Add
-      </Button>
-      {error && (
-        <span className="sr-only" role="alert">
-          {error}
-        </span>
-      )}
-    </form>
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <form onSubmit={onSubmit} className="flex gap-2 w-full">
+        <motion.div 
+          className="flex-1"
+          whileFocus={{ scale: 1.01 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Input
+            aria-label="Add a new task"
+            placeholder="Add a new task..."
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              if (error) setError("");
+            }}
+            className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+          />
+        </motion.div>
+        
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.1 }}
+        >
+          <Button 
+            type="submit" 
+            disabled={!canSubmit} 
+            className="px-4 gap-2 transition-all duration-200"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">Add</span>
+          </Button>
+        </motion.div>
+      </form>
+      
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -5, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -5, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mt-2"
+          >
+            <span className="text-sm text-destructive" role="alert">
+              {error}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

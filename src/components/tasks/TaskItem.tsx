@@ -3,13 +3,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { GripVertical, Trash2 } from "lucide-react";
 import { useTasks } from "@/context/TasksContext";
-import { motion } from "framer-motion";
 
-function TaskItemBase({ id, text, completed, handleProps }: {
+function TaskItemBase({ id, text, completed, handleProps, isDragging = false }: {
   id: string;
   text: string;
   completed: boolean;
   handleProps?: React.HTMLAttributes<HTMLSpanElement>;
+  isDragging?: boolean;
 }) {
   const { toggleTask, deleteTask } = useTasks();
 
@@ -17,33 +17,48 @@ function TaskItemBase({ id, text, completed, handleProps }: {
   const onDelete = useCallback(() => deleteTask(id), [deleteTask, id]);
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.18 }}
-      className="group flex items-center gap-3 bg-card border border-border rounded-lg p-3 transition-transform"
+    <div
+      className={`group flex items-center gap-3 bg-card border rounded-lg p-3 transition-all duration-200 ${
+        isDragging 
+          ? 'border-primary shadow-xl bg-card/95 backdrop-blur-sm rotate-1 scale-105' 
+          : 'border-border hover:border-border/80 hover:shadow-md hover:scale-[1.01]'
+      } ${completed ? 'opacity-75' : ''}`}
     >
-      <span {...handleProps} className="cursor-grab active:cursor-grabbing">
-        <GripVertical className="text-muted-foreground/70 shrink-0" />
+      <span 
+        {...handleProps} 
+        className={`shrink-0 transition-all duration-200 ${
+          completed 
+            ? 'cursor-not-allowed text-muted-foreground/50' 
+            : 'cursor-grab active:cursor-grabbing text-muted-foreground/70 hover:text-muted-foreground hover:scale-110'
+        }`}
+      >
+        <GripVertical className="w-4 h-4" />
       </span>
-      <Checkbox checked={completed} onCheckedChange={onToggle} />
+      
+      <Checkbox 
+        checked={completed} 
+        onCheckedChange={onToggle}
+        className="transition-transform hover:scale-110 active:scale-95"
+      />
+      
       <p
-        className={`flex-1 text-sm md:text-base ${completed ? "line-through text-muted-foreground" : ""}`}
+        className={`flex-1 text-sm md:text-base transition-all duration-300 ${
+          completed ? "line-through text-muted-foreground" : ""
+        }`}
       >
         {text}
       </p>
+      
       <Button
         variant="ghost"
         size="icon"
         aria-label="Delete task"
         onClick={onDelete}
-        className="opacity-0 group-hover:opacity-100 transition-opacity"
+        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-95"
       >
-        <Trash2 className="text-destructive" />
+        <Trash2 className="w-4 h-4" />
       </Button>
-    </motion.div>
+    </div>
   );
 }
 
